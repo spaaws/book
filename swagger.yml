@@ -1,0 +1,128 @@
+openapi: 3.0.0
+info:
+  title: Books API
+  description: Uma API simples para gerenciar um catálogo de livros.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+paths:
+  /books:
+    get:
+      summary: Listar todos os livros
+      operationId: listBooks
+      responses:
+        '200':
+          description: Lista de livros
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+    post:
+      summary: Criar um novo livro
+      operationId: createBook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookInput'
+      responses:
+        '201':
+          description: Livro criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          description: JSON inválido ou campos obrigatórios faltando
+  /books/{book_id}:
+    get:
+      summary: Obter um livro pelo ID
+      operationId: getBookById
+      parameters:
+        - name: book_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Livro encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '404':
+          description: Livro não encontrado
+    put:
+      summary: Atualizar um livro pelo ID
+      operationId: updateBookById
+      parameters:
+        - name: book_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookInput'
+      responses:
+        '200':
+          description: Livro atualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+        '400':
+          description: JSON inválido ou campos obrigatórios faltando
+        '404':
+          description: Livro não encontrado
+    delete:
+      summary: Deletar um livro pelo ID
+      operationId: deleteBookById
+      parameters:
+        - name: book_id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Livro deletado
+        '404':
+          description: Livro não encontrado
+components:
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID do livro
+        title:
+          type: string
+          description: Título do livro
+        author:
+          type: string
+          description: Autor do livro
+    BookInput:
+      type: object
+      required:
+        - id
+        - title
+        - author
+      properties:
+        id:
+          type: integer
+          description: ID do livro
+        title:
+          type: string
+          description: Título do livro
+        author:
+          type: string
+          description: Autor do livro
